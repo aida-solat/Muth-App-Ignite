@@ -25,7 +25,10 @@
     "build-ios": "react-native bundle --entry-file index.js --platform ios --dev false --bundle-output ios/main.jsbundle --assets-dest ios",
     "build-android": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
     "clean": "react-native-clean-project",
-    "clean-all": "npx react-native clean-project-auto"
+    "clean-all": "npx react-native clean-project-auto",
+      "Reset-metro-bundler-cache":"rm -rf node_modules/.cache/metro-bundler",
+      "rm-Android-assets-cache":"rm -rf android/app/src/main/assets/index.android.bundle",
+      "relaunch-metro-server":"npx react-native run-android"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.17.3",
