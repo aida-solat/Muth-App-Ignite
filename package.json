@@ -26,9 +26,9 @@
     "build-android": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
     "clean": "react-native-clean-project",
     "clean-all": "npx react-native clean-project-auto",
-      "Reset-metro-bundler-cache":"rm -rf node_modules/.cache/metro-bundler",
-      "rm-Android-assets-cache":"rm -rf android/app/src/main/assets/index.android.bundle",
-      "relaunch-metro-server":"npx react-native run-android"
+    "Reset-metro-bundler-cache": "rm -rf node_modules/.cache/metro-bundler",
+    "rm-Android-assets-cache": "rm -rf android/app/src/main/assets/index.android.bundle",
+    "relaunch-metro-server": "npx react-native run-android"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.17.3",
@@ -105,7 +105,7 @@
     "react-native-web": "^0.16.3",
     "reactotron-core-client": "^2.8.10",
     "regenerator-runtime": "^0.13.4",
-    "solidarity": "2.3.1",
+    "solidarity": "^2.3.1",
     "ts-jest": "26",
     "typescript": "4.2.3",
     "webpack": "4"
