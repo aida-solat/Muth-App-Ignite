@@ -1,69 +1,45 @@
 //user.ts
-import { types } from "mobx-state-tree"
+import { Instance, SnapshotOut, types } from "mobx-state-tree"
+import { User } from "../../services/api/api.types"
+
+/**
+ * Model description here for TypeScript hints.
+ */
 
 export const UserModel = types
   .model("User")
   .props({
-    id: types.optional(types.number, 0),
-    name: types.optional(types.string, ""),
-    email: types.optional(types.string, ""),
-    token: types.optional(types.string, ""),
+    id: types.number,
+    name: types.string,
+    username: types.string,
+    email: types.string,
+    address: types.model({
+      street: types.string,
+      suite: types.string,
+      city: types.string,
+      zipcode: types.string,
+      geo: types.model({
+        lat: types.string,
+        lng: types.string,
+      }),
+    }),
+    phone: types.string,
+    website: types.string,
+    company: types.model({
+      name: types.string,
+      catchPhrase: types.string,
+      bs: types.string,
+    }),
   })
   .views((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
-  .actions((self) => ({
-    updateUser: (user) => {
-      self.id = user.id
-      self.name = user.name
-      self.email = user.email
-      self.token = user.token
-    },
-    deleteUser: () => {
-      self.id = 0
-      self.name = ""
-      self.email = ""
-      self.token = ""
-    },
-    updateUsers: (users) => {
-      self.users = users
-    },
-  }))
-  .actions((self) => ({
-    /**
-     * Sign in the user
-     */
-    signIn: async () => {
-      const result = await self.environment.api.signIn()
-      if (result.kind === "ok") {
-        self.updateUser(result.user)
-      }
-      return result
-    },
+  .actions((self) => ({})) // eslint-disable-line @typescript-eslint/no-unused-vars
 
-    /**
-     * Sign out the user
-     */
-    signOut: async () => {
-      const result = await self.environment.api.signOut()
-      if (result.kind === "ok") {
-        self.deleteUser()
-      }
-      return result
-    },
-
-    /**
-     * Get users
-     */
-    getUsers: async () => {
-      const result = await self.environment.api.getUsers()
-      if (result.kind === "ok") {
-        self.updateUser(result.user)
-      }
-      return result
-    },
-  }))
-
-type UserModelType = typeof UserModel.Type
+type UserModelType = Instance<typeof UserModel>
 export interface User extends UserModelType {}
-type UserSnapshotType = typeof UserModel.SnapshotType
+type UserSnapshotType = SnapshotOut<typeof UserModel>
 export interface UserSnapshot extends UserSnapshotType {}
-export const createUserDefaultModel = () => types.optional(UserModel, {})
+
+export interface User {
+  id: number
+  name: string
+}

@@ -1,6 +1,6 @@
-import { ApisauceInstance, create, ApiResponse } from "apisauce"
-import { getGeneralApiProblem } from "./api-problem"
+import { ApisauceInstance } from "apisauce"
 import { ApiConfig, DEFAULT_API_CONFIG } from "./api-config"
+import { User } from "../../models/user/user"
 import * as Types from "./api.types"
 
 /**
@@ -33,6 +33,20 @@ export class Api {
    *
    * Be as quick as possible in here.
    */
+
+  login = async (username: string, password: string): Promise<User> => {
+    const response = await this.apisauce.post<Types.LoginResult>("/login", { username, password })
+    if (response.ok) {
+      const user = response.data.user
+      return user
+    } else {
+      throw new Error("Login failed")
+    }
+  }
+
+  logout = async () => {
+    await this.apisauce.post("/logout")
+  }
 
   /**
    * Gets a list of users.

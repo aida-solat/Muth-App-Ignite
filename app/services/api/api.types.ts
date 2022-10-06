@@ -46,6 +46,11 @@ export interface GetMusics {
   music: Music
 }
 
+export interface LoginResult {
+  kind: "ok"
+  user: User
+}
+
 export type GetMusicResult = Music | GeneralApiProblem
 
 export type GetMusicsResult = GetMusics | GeneralApiProblem

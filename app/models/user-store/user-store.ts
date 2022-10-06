@@ -1,36 +1,36 @@
-//user-store.ts
-import { Instance, SnapshotOut, types } from "mobx-state-tree"
-import { RealUserApi } from "../../services/api/user-api"
-import { withEnvironment } from "../extensions/with-environment"
-import { UserModel, UserSnapshot } from "../user/user"
+// Language: typescript
+// Path: app\models\user-store.tsx
+import { action, computed, observable } from "mobx"
+import { RootStoreModel } from "./root-store-model"
+import { User } from "../../models/user"
+import { Environment } from "../environment"
 
-export const UserStoreModel = types
-  .model("UserStore")
-  .props({
-    users: types.optional(types.array(UserModel), []),
-  })
-  .extend(withEnvironment)
-  .actions((self) => ({
-    saveUsers: (userSnapshots: UserSnapshot[]) => {
-      self.users.replace(userSnapshots)
-    },
-  }))
-  .actions((self) => ({
-    getUsers: async () => {
-      const userApi = new RealUserApi()
-      const result = await userApi.getUsers()
-      console.log("result", result)
+export class UserStore {
+  rootStore: RootStoreModel
+  env: Environment
 
-      if (result.kind === "ok") {
-        self.saveUsers(result.users)
-      } else {
-        __DEV__ && console.tron.log(result.kind)
-      }
-    },
-  }))
+  @observable
+  user: User | null = null
 
-type UserStoreType = Instance<typeof UserStoreModel>
-export interface UserStore extends UserStoreType {}
-type UserStoreSnapshotType = SnapshotOut<typeof UserStoreModel>
-export interface UserStoreSnapshot extends UserStoreSnapshotType {}
-export const createUserStoreDefaultModel = () => types.optional(UserStoreModel, {})
+  constructor(rootStore: RootStoreModel, env: Environment) {
+    this.rootStore = rootStore
+    this.env = env
+  }
+
+  @computed
+  get isLoggedIn() {
+    return this.user !== null
+  }
+
+  @action
+  login = async (username: string, password: string) => {
+    const user = await this.env.api.login(username, password)
+    this.user = user
+  }
+
+  @action
+  logout = async () => {
+    await this.env.api.logout()
+    this.user = null
+  }
+}
