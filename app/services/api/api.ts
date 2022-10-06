@@ -33,70 +33,24 @@ export class Api {
    *
    * Be as quick as possible in here.
    */
-  setup() {
-    // construct the apisauce instance
-    this.apisauce = create({
-      baseURL: this.config.url,
-      timeout: this.config.timeout,
-      headers: {
-        Accept: "application/json",
-      },
-    })
-  }
 
   /**
    * Gets a list of users.
    */
-  async getUsers(): Promise<Types.GetUsersResult> {
-    // make the api call
-    const response: ApiResponse<any> = await this.apisauce.get(`/users`)
 
-    // the typical ways to die when calling an api
-    if (!response.ok) {
-      const problem = getGeneralApiProblem(response)
-      if (problem) return problem
-    }
-
-    const convertUser = (raw) => {
-      return {
-        id: raw.id,
-        name: raw.name,
-      }
-    }
-
-    // transform the data into the format we are expecting
-    try {
-      const rawUsers = response.data
-      const resultUsers: Types.User[] = rawUsers.map(convertUser)
-      return { kind: "ok", users: resultUsers }
-    } catch {
-      return { kind: "bad-data" }
-    }
+  getMusic(): Promise<Types.GetMusicResult> {
+    throw new Error("Method not implemented.")
   }
 
-  /**
-   * Gets a single user by ID
-   */
+  getMusics(): Promise<Types.GetMusicsResult> {
+    throw new Error("Method not implemented.")
+  }
 
-  async getUser(id: string): Promise<Types.GetUserResult> {
-    // make the api call
-    const response: ApiResponse<any> = await this.apisauce.get(`/users/${id}`)
+  getuser(): Promise<Types.User> {
+    throw new Error("Method not implemented.")
+  }
 
-    // the typical ways to die when calling an api
-    if (!response.ok) {
-      const problem = getGeneralApiProblem(response)
-      if (problem) return problem
-    }
-
-    // transform the data into the format we are expecting
-    try {
-      const resultUser: Types.User = {
-        id: response.data.id,
-        name: response.data.name,
-      }
-      return { kind: "ok", user: resultUser }
-    } catch {
-      return { kind: "bad-data" }
-    }
+  getusers(): Promise<Types.GetUsers> {
+    throw new Error("Method not implemented.")
   }
 }

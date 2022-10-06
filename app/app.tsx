@@ -24,50 +24,57 @@ import { ErrorBoundary } from "./screens/error/error-boundary"
 // stack navigation, use `createNativeStackNavigator` in place of `createStackNavigator`:
 // https://github.com/kmagiera/react-native-screens#using-native-stack-navigator
 
-export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
-
-/**
- * This is the root component of our app.
- */
-function App() {
+export const App = () => {
+  const [isLoadingComplete, setLoadingComplete] = useState(false)
   const [rootStore, setRootStore] = useState<RootStore | undefined>(undefined)
-  const {
-    initialNavigationState,
-    onNavigationStateChange,
-    isRestored: isNavigationStateRestored,
-  } = useNavigationPersistence(storage, NAVIGATION_PERSISTENCE_KEY)
+  const [initialNavigationState, setInitialNavigationState] = useState()
+  const containerRef = React.useRef()
+  const { getActiveChildNavigationOptions } = useNavigationPersistence(
+    containerRef,
+    () => setInitialNavigationState,
+  )
 
-  // Kick off initial async loading actions, like loading fonts and RootStore
+  // Load any resources or data that we need prior to rendering the app
   useEffect(() => {
-    ;(async () => {
-      await initFonts() // expo
-      setupRootStore().then(setRootStore)
-    })()
+    async function loadResourcesAndDataAsync() {
+      try {
+        // Load our initial navigation state
+        setInitialNavigationState(await storage.loadNavigationState())
+
+        // Load fonts
+        await initFonts()
+
+        // Initialize the root store
+        setupRootStore().then(setRootStore)
+      } catch (e) {
+        // We might want to provide this error information to an error reporting service
+        console.warn(e)
+      } finally {
+        setLoadingComplete(true)
+      }
+    }
+
+    loadResourcesAndDataAsync()
   }, [])
 
-  // Before we show the app, we have to wait for our state to be ready.
-  // In the meantime, don't render anything. This will be the background
-  // color set in native by rootView's background color.
-  // In iOS: application:didFinishLaunchingWithOptions:
-  // In Android: https://stackoverflow.com/a/45838109/204044
-  // You can replace with your own loading component if you wish.
-  if (!rootStore || !isNavigationStateRestored) return null
-
-  // otherwise, we're ready to render the app
-  return (
-    <ToggleStorybook>
+  if (!isLoadingComplete || !rootStore) {
+    return null
+  } else {
+    return (
       <RootStoreProvider value={rootStore}>
-        <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-          <ErrorBoundary catchErrors={"always"}>
+        <ErrorBoundary>
+          <SafeAreaProvider initialMetrics={initialWindowMetrics}>
             <AppNavigator
+              ref={containerRef}
               initialState={initialNavigationState}
-              onStateChange={onNavigationStateChange}
+              screenProps={{ getActiveChildNavigationOptions }}
             />
-          </ErrorBoundary>
-        </SafeAreaProvider>
+            <ToggleStorybook />
+          </SafeAreaProvider>
+        </ErrorBoundary>
       </RootStoreProvider>
-    </ToggleStorybook>
-  )
+    )
+  }
 }
 
-export default App
+// app\app.tsx

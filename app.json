@@ -1,12 +1,13 @@
 {
-  "name": "muthapp",
-  "displayName": "muthapp",
   "expo": {
-    "name": "muthapp",
-    "slug": "muthapp",
+    "name": "myapp",
+    "slug": "myapp",
+    "privacy": "public",
+    "sdkVersion": "38.0.0",
+    "platforms": ["ios", "android", "web"],
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/app-icon.png",
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
@@ -19,8 +20,17 @@
     "ios": {
       "supportsTablet": true
     },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/images/app-icon.png",
+        "backgroundColor": "#FFFFFF"
+      }
+    },
     "web": {
       "favicon": "./assets/images/favicon.png"
+    },
+    "extra": {
+      "env": "dev"
     }
   }
 }

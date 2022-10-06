@@ -78,3 +78,8 @@ AppNavigator.displayName = "AppNavigator"
  */
 const exitRoutes = ["welcome"]
 export const canExit = (routeName: string) => exitRoutes.includes(routeName)
+
+
+//app-navigator.tsx
+
+

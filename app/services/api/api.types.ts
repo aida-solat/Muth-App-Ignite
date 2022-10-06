@@ -1,13 +1,53 @@
 import { GeneralApiProblem } from "./api-problem"
-import { Character } from "../../models/character/character"
 
 export interface User {
   id: number
   name: string
+  username: string
+  email: string
+  address: {
+    street: string
+    suite: string
+    city: string
+    zipcode: string
+    geo: {
+      lat: string
+      lng: string
+    }
+  }
+  phone: string
+  website: string
+  company: {
+    name: string
+    catchPhrase: string
+    bs: string
+  }
 }
 
-export type GetUsersResult = { kind: "ok"; users: User[] } | GeneralApiProblem
-export type GetUserResult = { kind: "ok"; user: User } | GeneralApiProblem
+export interface GetUsers {
+  kind: "ok"
+  user: User
+}
 
-export type GetCharactersResult = { kind: "ok"; characters: Character[] } | GeneralApiProblem
-export type GetCharacterResult = { kind: "ok"; character: Character } | GeneralApiProblem
+export type GetUserResult = GetUsers | GeneralApiProblem
+export interface Music {
+  id: string
+  name: string
+  artist: string
+  album: string
+  genre: string
+  year: string
+  duration: string
+  path: string
+}
+
+export interface GetMusics {
+  kind: "ok"
+  music: Music
+}
+
+export type GetMusicResult = Music | GeneralApiProblem
+
+export type GetMusicsResult = GetMusics | GeneralApiProblem
+
+export type GetUsersResult = { kind: "ok"; users: User[] } | { kind: "bad-data" }
